@@ -13,6 +13,7 @@ https://hub.docker.com/repository/docker/andreaarduino/puppet-nginx
 ## How the Puppet module for Nginx web server works
 
 The Puppet module for Nginx web server is deployed within a Docker container.
+
 The Docker container has the following features:
 * **base image**: CentOs 7 latest version
 * **installed packages**: Puppet - latest version

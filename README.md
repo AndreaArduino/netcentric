@@ -1,15 +1,5 @@
 # Netcentric - technical assessment
 
-## Useful links
-
-### GitHub repository
-
-https://github.com/AndreaArduino/netcentric
-
-### Docker Hub repository
-
-https://hub.docker.com/repository/docker/andreaarduino/puppet-nginx
-
 ## How the Puppet module for Nginx web server works
 
 The Puppet module for Nginx web server is deployed within a Docker container.
@@ -92,7 +82,7 @@ curl -H "Host: domain.com" -k https://localhost/resoure2/ --write-out '%{redirec
 Web browser configuration:
 * open Mozilla Firefox on your local machine
 * navigate "about:preferences"
-* go to General -> Network settings
+* go to General -> Network Settings
 * select **Manual proxy configuration**
 * for **HTTP Proxy** use `localhost` and for its **Port** use `8080`
 
@@ -115,3 +105,21 @@ The first four entries in each row of the log file are:
 * X-Forwarded-For header
 * protocol used in the request
 * processing time for the request
+
+## Useful links
+
+### GitHub repository
+
+https://github.com/AndreaArduino/netcentric
+
+### Docker Hub repository
+
+https://hub.docker.com/repository/docker/andreaarduino/puppet-nginx
+
+## Definition of the solution implemented
+
+I have looked for an existing Puppet module - i.e., jfryman-nginx for Nginx web server management - and I have extended it in order to satisfy the requirements of the technical assessment.
+
+The customizations implemented on the Puppet module have been derived from its documentation.
+
+In order to make it easy for you to test the implemented solution I have built a custom Docker image - where I have installed Puppet and the module with my customizations - and made it available for you on a [Docker Hub public repository](https://hub.docker.com/repository/docker/andreaarduino/puppet-nginx).

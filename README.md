@@ -17,12 +17,15 @@ The Puppet module for Nginx web server is deployed within a Docker container.
 The Docker container has the following features:
 * **base image**: CentOs 7 latest version
 * **installed packages**: Puppet - latest version
-* **existing Puppet module installed**: jfryman-nginx
+* **existing Puppet module installed**: jfryman-nginx - allows Nginx management
 
 ### jfryman-nginx Puppet module customizations
+
+The jfryman-nginx Puppet module is extended/customized within the Docker container as described below:
+
 * **puppet/nginx.pp** - Puppet custom manifest to install Nginx web server with default configurations
-* **puppet/nginx_redirect.pp** - Puppet custom manifest to implement Nginx redirects for domain.com. In particular it deploys an Nginx configuration file /etc/nginx/sites-enabled/domain.com.conf with the redirects implementation - allowing Nginx to listen on both  port 80 and 443 for domain.com. A self-signed SSL certificate for domain.com is created within the Docker container at build time and made available to Nginx web server.
-* **puppet/nginx_proxy.pp** - Puppet custom manifest to implement an Ngnx forward proxy with custom log format. In particular it deploys an Nginx configuration file /etc/nginx/sites-enabled/domain.com.conf/forward_proxy.conf with the forward proxy configurations - allowing Nginx to proxy any request received on port 8080 towards Google DNS name server 8.8.8.8 - and custom log format.
+* **puppet/nginx_redirect.pp** - Puppet custom manifest to implement Nginx redirects for domain.com. In particular it deploys an Nginx configuration file /etc/nginx/sites-enabled/domain.com.conf with the redirects implementation - allowing Nginx to listen on both port 80 and 443 for domain.com. A self-signed SSL certificate for domain.com is created within the Docker container at build time and made available to Nginx web server.
+* **puppet/nginx_proxy.pp** - Puppet custom manifest to implement an Ngnx forward proxy with custom log format. In particular it deploys an Nginx configuration file /etc/nginx/sites-enabled/forward_proxy.conf with the forward proxy configurations - allowing Nginx to proxy any request received on port 8080 towards Google DNS name server 8.8.8.8 - and custom log format.
 
 ## Setup for testing
 
@@ -32,7 +35,7 @@ The instructions provided in the following section will allow the user to run th
 
 The user will connect via SSH to the Docker container in order to test Nginx redirects behaviour.
 
-The user will also be guided through the configuration of a common web browser in order to exploit the Docker container as a forward proxy.
+The user will also be guided through the configuration of Mozilla Firefox web browser in order to exploit the Docker container as a forward proxy.
 
 ### Requirements
 
@@ -66,7 +69,7 @@ Run a shell on the Docker container:
 docker container exec -it puppet-nginx bash
 ```
 
-Execute the `curl` commands below within the Docker container - the output of each commands is the *redirect_url* of the response which allows you to verify that the redirects are properly working:
+Execute the `curl` commands below within the Docker container - the output of each commands is the *redirect_url* of each response which allows you to verify that the redirects are properly working:
 
 ```
 curl -H "Host: domain.com" -k https://localhost --write-out '%{redirect_url}' -o /dev/null --silent
@@ -101,7 +104,7 @@ Run a shell on the Docker container:
 docker container exec -it puppet-nginx bash
 ```
 
-Check latest lines of the Nginx logs in order to see the traffic flowing through the proxy:
+Check latest lines of the Nginx logs in the Docker container in order to see the traffic flowing through the proxy:
 
 ```
 tail -50f /var/log/nginx/forward_proxy.access.log
@@ -110,5 +113,5 @@ tail -50f /var/log/nginx/forward_proxy.access.log
 The first four entries in each row of the log file are:
 * remote address of the request's end user
 * X-Forwarded-For header
-* protocol used in the request: http or https
+* protocol used in the request
 * processing time for the request

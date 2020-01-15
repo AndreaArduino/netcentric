@@ -25,16 +25,33 @@ The Docker container has the following features:
 
 ## Setup for testing
 
+### Introduction
+
+The instructions provided in the following section will allow the user to run the Docker container previously described.
+
+The user will connect via SSH to the Docker container in order to test Nginx redirects behaviour.
+
+The user will also be guided through the configuration of a web browser - Mozilla Firefox or Google Chrome - in order to exploit the Docker container as a forward proxy.
+
+### Requirements
+
+1. Docker installed on the local machine where tests are conducted. Please see [Docker install page](https://docs.docker.com/install/) for installation details.
+2. Internet connection
+
 ### Pull Docker image
 
+Pull latest Docker image from [Docker Hub repository](https://hub.docker.com/repository/docker/andreaarduino/puppet-nginx):
+
 ```
-docker pull andreaarduino/puppet-nginx:v5
+docker pull andreaarduino/puppet-nginx:latest
 ```
 
 ### Run Docker container
 
+Run Docker container from the image previously pulled and map port 8080 of your local machine over port 8080 of the Docker container:
+
 ```
-docker container run --name puppet-nginx -d -p 8080:8080 andreaarduino/puppet-nginx:v5
+docker container run --name puppet-nginx -d -p 8080:8080 andreaarduino/puppet-nginx:latest
 ```
 
 ## Testing
@@ -47,7 +64,7 @@ Run a shell on the Docker container:
 docker container exec -it puppet-nginx bash
 ```
 
-Execute the `curl` commands below on the Docker container - see *Location* in the output of the command in order to verify that the redirects work properly:
+Execute the `curl` commands below on the Docker container - see *Location* in the output of the command in order to verify the redirects are properly working:
 
 ```
 curl -H "Host: domain.com" -k https://localhost -vvv
@@ -81,4 +98,4 @@ tail -f /var/log/nginx/forward_proxy.access.log
 
 Open Firefox -> open preferences -> General -> Network settings -> select "Manual proxy configuration" -> for HTTP Proxy use "localhost" and for its Port use "8080"
 
-Navigate any HTTP site and check traffic on Nginx logs:
+Navigate any HTTP site and check traffic on Nginx logs.

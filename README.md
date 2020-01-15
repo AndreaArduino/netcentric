@@ -86,7 +86,11 @@ curl -H "Host: domain.com" -k https://localhost/resoure2/ -vvv
 ### Proxy
 
 Web browser configuration:
-* **Mozilla Firefox**: open Mozilla Firefox on your local machine -> navigate to "about:preferences" -> go to General -> Network settings -> select "Manual proxy configuration" -> for **HTTP Proxy** use `localhost` and for its **Port** use `8080`
+* open Mozilla Firefox on your local machine
+* navigate "about:preferences"
+* go to General -> Network settings
+* select **Manual proxy configuration**
+* for **HTTP Proxy** use `localhost` and for its **Port** use `8080`
 
 Navigate any site using http protocol - e.g., http://google.com
 

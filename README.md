@@ -108,10 +108,6 @@ The first four entries in each row of the log file are:
 
 ## Useful links
 
-### GitHub repository
-
-https://github.com/AndreaArduino/netcentric
-
 ### Docker Hub repository
 
 https://hub.docker.com/repository/docker/andreaarduino/puppet-nginx

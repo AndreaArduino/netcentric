@@ -19,9 +19,9 @@ The Docker container has the following features:
 * **existing Puppet module installed**: jfryman-nginx
 
 ### jfryman-nginx Puppet module customizations
-* **puppet/nginx.pp** - install Nginx web server
-* **puppet/nginx_redirect.pp** - implement Nginx redirects for domain.com
-* **puppet/nginx_proxy.pp** - implement forward proxy within Nginx with custom log format
+* **puppet/nginx.pp** - Puppet custom manifest to install Nginx web server with default configurations
+* **puppet/nginx_redirect.pp** - Puppet custom manifest to implement Nginx redirects for domain.com. In particular it deploys an Nginx configuration file /etc/nginx/sites-enabled/domain.com.conf with the redirects implementation - allowing Nginx to listen on both  port 80 and 443 for domain.com. A self-signed SSL certificate for domain.com is created within the Docker container at build time and made available to Nginx web server.
+* **puppet/nginx_proxy.pp** - Puppet custom manifest to implement an Ngnx forward proxy with custom log format. In particular it deploys an Nginx configuration file /etc/nginx/sites-enabled/domain.com.conf/forward_proxy.conf with the forward proxy configurations - allowing Nginx to proxy any request received on port 8080 towards Google DNS name server 8.8.8.8 - and custom log format.
 
 ## Setup for testing
 
@@ -65,22 +65,22 @@ Run a shell on the Docker container:
 docker container exec -it puppet-nginx bash
 ```
 
-Execute the `curl` commands below within the Docker container and look for *Location* in the output of each command in order to verify that the redirects are properly working:
+Execute the `curl` commands below within the Docker container - the output of each commands is the *redirect_url* of the response which allows you to verify that the redirects are properly working:
 
 ```
-curl -H "Host: domain.com" -k https://localhost -vvv
-```
-
-```
-curl -H "Host: domain.com" -k https://localhost/ -vvv
+curl -H "Host: domain.com" -k https://localhost --write-out '%{redirect_url}' -o /dev/null --silent
 ```
 
 ```
-curl -H "Host: domain.com" -k https://localhost/resoure2 -vvv
+curl -H "Host: domain.com" -k https://localhost/ --write-out '%{redirect_url}' -o /dev/null --silent
 ```
 
 ```
-curl -H "Host: domain.com" -k https://localhost/resoure2/ -vvv
+curl -H "Host: domain.com" -k https://localhost/resoure2 --write-out '%{redirect_url}' -o /dev/null --silent
+```
+
+```
+curl -H "Host: domain.com" -k https://localhost/resoure2/ --write-out '%{redirect_url}' -o /dev/null --silent
 ```
 
 ### Proxy
@@ -106,3 +106,8 @@ Check latest lines of the Nginx logs in order to see the traffic flowing through
 tail -50f /var/log/nginx/forward_proxy.access.log
 ```
 
+The first four entries in each row of the log file are:
+* remote address of the request's end user
+* X-Forwarded-For header
+* protocol used in the request: http or https
+* processing time for the request

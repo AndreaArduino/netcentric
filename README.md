@@ -1,4 +1,4 @@
-# Netcentric - Technical assessment
+# Netcentric - technical assessment
 
 ## Useful links
 
@@ -31,12 +31,13 @@ The instructions provided in the following section will allow the user to run th
 
 The user will connect via SSH to the Docker container in order to test Nginx redirects behaviour.
 
-The user will also be guided through the configuration of a web browser - Mozilla Firefox or Google Chrome - in order to exploit the Docker container as a forward proxy.
+The user will also be guided through the configuration of a common web browser in order to exploit the Docker container as a forward proxy.
 
 ### Requirements
 
 1. Docker installed on the local machine where tests are conducted. Please see [Docker install page](https://docs.docker.com/install/) for installation details.
-2. Internet connection
+2. Mozilla Firefox installed on the local machine
+3. Internet connection
 
 ### Pull Docker image
 
@@ -48,7 +49,7 @@ docker pull andreaarduino/puppet-nginx:latest
 
 ### Run Docker container
 
-Run Docker container from the image previously pulled and map port 8080 of your local machine over port 8080 of the Docker container:
+Run Docker container from the previously pulled image and map port 8080 of your local machine over port 8080 of the Docker container:
 
 ```
 docker container run --name puppet-nginx -d -p 8080:8080 andreaarduino/puppet-nginx:latest
@@ -64,7 +65,7 @@ Run a shell on the Docker container:
 docker container exec -it puppet-nginx bash
 ```
 
-Execute the `curl` commands below on the Docker container - see *Location* in the output of the command in order to verify the redirects are properly working:
+Execute the `curl` commands below within the Docker container and look for *Location* in the output of each command in order to verify that the redirects are properly working:
 
 ```
 curl -H "Host: domain.com" -k https://localhost -vvv
@@ -84,6 +85,11 @@ curl -H "Host: domain.com" -k https://localhost/resoure2/ -vvv
 
 ### Proxy
 
+Web browser configuration:
+* **Mozilla Firefox**: open Mozilla Firefox on your local machine -> navigate to "about:preferences" -> go to General -> Network settings -> select "Manual proxy configuration" -> for **HTTP Proxy** use `localhost` and for its **Port** use `8080`
+
+Navigate any site using http protocol - e.g., http://google.com
+
 Run a shell on the Docker container:
 
 ```
@@ -93,9 +99,6 @@ docker container exec -it puppet-nginx bash
 Check latest lines of the Nginx logs in order to see the traffic flowing through the proxy:
 
 ```
-tail -f /var/log/nginx/forward_proxy.access.log
+tail -50f /var/log/nginx/forward_proxy.access.log
 ```
 
-Open Firefox -> open preferences -> General -> Network settings -> select "Manual proxy configuration" -> for HTTP Proxy use "localhost" and for its Port use "8080"
-
-Navigate any HTTP site and check traffic on Nginx logs.
